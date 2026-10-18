@@ -298,28 +298,53 @@ local nextTipChange = 0
 function GM:DrawSpectate()
     local ply = LocalPlayer()
     local plyselect = ply:GetNWEntity("SelectPlayer", Entity(-1))
-    
-    if not ply:Alive() and ply:GetNWBool("Spectating", false) then
-        local nick = "Unknown"
-        if IsValid(plyselect) and plyselect:IsPlayer() then
-            nick = plyselect:Nick()
-        end
-        
-        if hmcdhelp:GetBool() then
-            if CurTime() >= nextTipChange then
-                currentTip = table.Random(spectateTips) or ""
-                nextTipChange = CurTime() + 20
-            end
 
-            drawTextShadow((ply:GetNWInt("SpectateMode") == 3 and "Noclip") or nick, "DefaultFont", 950, 50, team.GetColor(1), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-            drawTextShadow("R - Change mode spectate player", "FontSmall", 930, 840, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-            drawTextShadow("LMB - Change player spectate", "FontSmall", 930, 870, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-            drawTextShadow("RMB - Change mode spectate ( noclip / player )", "FontSmall", 930, 900, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-            
-            if currentTip ~= "" then
-                drawTextShadow(currentTip, "FontSmall2", ScrW() / 2, ScrH() / 1.05, Color(5, 5, 5), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-            end
+    if ply:Alive() or not ply:GetNWBool("Spectating", false) then return end
+    if not hmcdhelp:GetBool() then return end
+
+    if CurTime() >= nextTipChange then
+        currentTip = table.Random(spectateTips) or ""
+        nextTipChange = CurTime() + 20
+    end
+
+    local mode = ply:GetNWInt("SpectateMode", 0)
+    local cx = ScrW() / 2
+    local y = 50
+
+    drawTextShadow("Spectating", "FontSmall", cx, y, Color(180, 180, 180), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+
+    if mode == 3 then
+        drawTextShadow("Free Camera", "FontBigger", cx, y + 40, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    elseif IsValid(plyselect) and plyselect:IsPlayer() then
+        local nick = plyselect:GetNWString("Character_Name", "")
+        if nick == "" then nick = plyselect:Nick() end
+
+        local hp = math.max(0, plyselect:Health())
+        local role = plyselect:GetNWString("RoleShow", "Bystander")
+        local roleText, roleColor = role, Color(200, 200, 200)
+
+        if role == "Traitor" then
+            roleText = "Traitor"
+            roleColor = Color(164, 26, 26)
+        elseif role == "Bystander" or role == "Innocent" or role == "Gunman" then
+            roleText = "Innocent"
+            roleColor = Color(57, 62, 213)
         end
+
+        drawTextShadow(nick, "FontBigger", cx, y + 40, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        drawTextShadow(hp .. "/100 HP", "FontBig", cx, y + 85, Color(230, 230, 230), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        drawTextShadow(roleText, "FontBigger", cx, y + 125, roleColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    else
+        drawTextShadow("No target", "FontBigger", cx, y + 40, Color(180, 180, 180), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    end
+
+    local bx = ScrW() - 30
+    drawTextShadow("R - Change mode spectate player", "FontSmall", bx, ScrH() - 240, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
+    drawTextShadow("LMB - Change player spectate", "FontSmall", bx, ScrH() - 210, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
+    drawTextShadow("RMB - Change mode spectate ( noclip / player )", "FontSmall", bx, ScrH() - 180, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
+
+    if currentTip ~= "" then
+        drawTextShadow(currentTip, "FontSmall2", cx, ScrH() / 1.05, Color(25, 25, 25), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end
 end
 
