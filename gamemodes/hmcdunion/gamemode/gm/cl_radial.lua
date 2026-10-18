@@ -386,7 +386,7 @@ function GM:DrawRadialMenu()
     			Main = "?"
     			Sub = "?"
 			end
-			drawShadow(ply:GetNWString("Character_Name") or "Bystander", "GM", w/2.7, h/8.5, Color(255,255,255,255), 1)
+			drawShadow(ply:GetNWString("Character_Name") or "Bystander", "GM", w/2.7, h/8.5, ply:GetPlayerColor():ToColor(), 1)
 			drawShadow(ply:GetNWString("Role") or "Bystander", "GM", w/3, h/5, Color(ply:GetNWInt("RoleColor_R"),ply:GetNWInt("RoleColor_G"),ply:GetNWInt("RoleColor_B"),255), 1)
 			drawShadow(Main, "Radial_QM", sx + w * 0.6 * x, sy + h * 0.6 * y - fontHeight / 3,textCol, 1)
 			drawShadow(Sub, "RadialSmall_QM", sx + w * 0.6 * x, sy + h * 0.6 * y + fontHeight / 2, textCol, 1)
