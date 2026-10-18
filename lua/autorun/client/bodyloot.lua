@@ -1,3 +1,29 @@
+
+local wepModels3D = {
+
+    ["wep_jack_hmcd_baseballbat"] = {
+        pos    = Vector(-2, 4, 5),
+        ang    = Angle(0, 20, 100),
+        camPos = Vector(35, 35, 18),
+        fov    = 30,
+    },
+    ["wep_jack_hmcd_axe"] = {
+        pos    = Vector(5.4, 5, 3),
+        ang    = Angle(90, 40, 0),
+        camPos = Vector(35, 35, 18),
+        fov    = 40,
+    },
+
+    ["wep_jack_hmcd_hatchet"] = {
+        pos    = Vector(0, 0, 0),
+        ang    = Angle(0, 0, 0),
+        camPos = Vector(35, 35, 18),
+        fov    = 20,
+    },
+
+
+}
+
 local blackListedWeps = {
     ["wep_jack_hmcd_hands"] = true,
     ["wep_jack_hmcd_fastzombhands"] = true,
@@ -66,6 +92,77 @@ local helmetIcons = {
     [""] = Material("empty"),
     ["ACH"] = Material("vgui/icons/helmet")
 }
+
+local function AddWeaponModel(parent, w, h, wepClass, wepTbl)
+    local cfg = wepModels3D[wepClass]
+    if not cfg then return end
+
+    local mdl = cfg.model
+        or (type(wepTbl) == "table" and (wepTbl.WorldModel or wepTbl.ViewModel))
+        or nil
+    if not mdl or mdl == "" then return end
+
+    local model = vgui.Create("DModelPanel", parent)
+    model:SetPos(2, 2)
+    model:SetSize(w - 4, h - 4)
+    model:SetMouseInputEnabled(false)
+    model:SetKeyboardInputEnabled(false)
+    model:SetCursor("arrow")
+    model:SetPaintBackground(false)
+    model:SetFOV(cfg.fov or 45)
+    model:SetModel(mdl)
+
+    model:SetAmbientLight(Color(180, 180, 180))
+    model:SetDirectionalLight(BOX_TOP, Color(255, 255, 255))
+    model:SetDirectionalLight(BOX_FRONT, Color(120, 120, 120))
+
+    local modelPos = cfg.pos or Vector(0, 0, 0)
+    local modelAng = cfg.ang or Angle(0, 45, 0)
+
+    model.LayoutEntity = function(self, ent)
+        if not IsValid(ent) then return end
+        ent:SetAngles(modelAng)
+        ent:SetPos(modelPos) 
+    end
+
+    local ent = model:GetEntity()
+    if IsValid(ent) then
+        local mins, maxs = ent:GetRenderBounds()
+        local center = (mins + maxs) * 0.5
+
+        local camPos = cfg.camPos
+        local lookAt = cfg.lookAt or center
+
+        if not camPos then
+            local size = (maxs - mins):Length()
+            if size <= 0 then
+                camPos = center + Vector(40, 40, 20)
+            else
+                camPos = center + Vector(size, size, size * 0.5)
+            end
+        else
+            camPos = camPos + center
+        end
+
+        model:SetCamPos(camPos)
+        model:SetLookAt(lookAt)
+    end
+
+    return model
+end
+
+local function DrawWeaponIcon(button, w, h, wepTbl)
+    if type(wepTbl) ~= "table" then return end
+    local tex = wepTbl.IconTexture
+    if not tex or tex == "" then return end
+
+    local mat = Material(tex)
+    if not mat or mat:IsError() then return end
+
+    surface.SetMaterial(mat)
+    surface.SetDrawColor(255, 255, 255, 255)
+    surface.DrawTexturedRect(2, 2, w - 4, h - 4)
+end
 
 local panel
 
@@ -152,15 +249,21 @@ net.Receive("inventory", function()
         button:SetSize(btnW, btnH)
         button:SetText("")
 
-        local iconMat = (type(wepTbl) == "table" and wepTbl.IconTexture and Material(wepTbl.IconTexture)) or Material("empty")
+        local use3D = wepModels3D[wep] ~= nil
 
         button.Paint = function(self, w, h)
             draw.RoundedBox(0, 0, 0, w, h, self:IsHovered() and black2 or Color(50,50,50,220))
             surface.SetDrawColor(0, 0, 0, 0)
             surface.DrawOutlinedRect(1, 1, w - 2, h - 2)
-            surface.SetMaterial(iconMat)
-            surface.SetDrawColor(255, 255, 255, 255)
-            surface.DrawTexturedRect(2, 2, w - 4, h - 4)
+
+
+            if not use3D then
+                DrawWeaponIcon(self, w, h, wepTbl)
+            end
+        end
+
+        if use3D then
+            AddWeaponModel(button, btnW, btnH, wep, wepTbl)
         end
 
         button.DoClick = function(selfBtn)
