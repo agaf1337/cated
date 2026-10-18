@@ -59,9 +59,7 @@ local function DoFootstepEffects(ply, foot)
         ply:ViewPunch(Angle(power, side, roll) * painMult)
 		if legBroken then
 			ply.pain_add = ply.pain_add + 6	
-			if fef < CurTime() then ply:Notify(table.Random(painrun), true, Color(220, 0, 0), false, 0.08)  fef = CurTime() + 30 end
 			if math.random(1,16) == 1 then Faking(ply) 
-			ply:Notify(table.Random(paintrip), true, Color(255, 0, 0), false, 0.035)
 			if ply.ModelSex == "male" then ply:EmitSound("vo/episode_1/npc/male01/cit_pain0"..math.random(1,9)..".wav", 100) else ply:EmitSound("vo/episode_1/npc/female01/cit_pain0"..math.random(1,9)..".wav", 100) end
 			end
 		end
@@ -71,12 +69,10 @@ local function DoFootstepEffects(ply, foot)
         ply:ViewPunch(Angle(power, side, roll) * painMult)
 		if legBroken then
 			ply.pain_add = ply.pain_add + 1
-			if fef < CurTime() then ply:Notify(table.Random(painwalk), true, Color(220, 0, 0), false, 0.08)  fef = CurTime() + 60 
-			end
 
 			if math.random(1,64) == 1 then Faking(ply) 
 			
-			ply:Notify(table.Random(paintrip), true, Color(255, 0, 0), false, 0.035)
+
 			if ply.ModelSex == "male" then ply:EmitSound("vo/episode_1/npc/male01/cit_pain0"..math.random(1,9)..".wav", 100) else ply:EmitSound("vo/episode_1/npc/female01/cit_pain0"..math.random(1,9)..".wav", 100) end
 			end
 		end
