@@ -16,13 +16,9 @@ hook.Add("RenderScreenspaceEffects","Effects", function()
 	ppain = math.Approach(ppain, painlevel, FrameTime() * 10)
 
     if ppain > 0.01 then
-        local intensity = math.Clamp(ppain / 120, 0, 1)
-        local wave = math.sin(CurTime() * 1)
+    	local blur = math.Clamp(ppain / 100, 0, 1)
 
-        local sDist = (wave * 30) * intensity
-        local sContrast = (2 + (wave + 1) * 0.2) * intensity
-        
-        DrawSharpen(sContrast, sDist)
+    	render.DrawMercRadialBlur(0.5, 0.5, blur * 0.1)
     end
 
 	DrawToyTown(fraction * 8, ScrH() * fraction * 1.5)
