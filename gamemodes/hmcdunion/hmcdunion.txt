@@ -1,7 +1,7 @@
 "hmcdunion"
 {
 	"base"		"Homicide"
-	"title"		"Homicided"
+	"title"		"Cated"
 	"maps"		""
 	"menusystem"	"1"
 	"settings"
