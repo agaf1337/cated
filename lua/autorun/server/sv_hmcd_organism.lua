@@ -385,22 +385,6 @@ hook.Add("Player Think", "hk_Stamina", function(ply)
     ply.nextPainNotify = ply.nextPainNotify or 0
     ply.nextPainNotify2 = ply.nextPainNotify2 or 0    
 
-    if pain >= 150 and pain > ply.lastPainValue and !ply.Otrub then
-        if CurTime() > ply.nextPainNotify then
-            local phrase = table.Random(killyourself1)
-            ply:Notify(phrase, true, Color(200, 0, 0), false, 0.1)
-            
-            ply.nextPainNotify = CurTime() + math.random(4, 7)
-        end
-    end
-
-    if pain >= 250 and pain > ply.lastPainValue and !ply.Otrub and !ply.fake then
-        if CurTime() > ply.nextPainNotify2 then
-            Faking(ply)
-            ply.nextPainNotify2 = CurTime() + 5
-        end
-    end
-
     ply.lastPainValue = pain
 
     if isHolding then
@@ -418,7 +402,7 @@ hook.Add("Player Think", "hk_Stamina", function(ply)
 
                 if ply.stamina['int'] <= 15 and not ply.staminaWarned then
                     if ply.Notify then
-                        ply:Notify("I can't hold any longer..", true, Color(230, 10, 10), false, 0.09)
+                        ply:ChatPrint("I can't hold any longer..")
                     end
                     ply.staminaWarned = true
                 end
