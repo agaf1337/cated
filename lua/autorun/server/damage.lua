@@ -160,7 +160,7 @@ hook.Add("EntityTakeDamage","ragdamage",function(ent,dmginfo)
     ply.LastDamageType = dmginfo:GetDamageType()
     ply.LastAttacker = att
 	ply.LastDMGInfo = rubatPidor
-	dmginfo:ScaleDamage(2)
+	dmginfo:ScaleDamage(1)
 	if rag then
 		if dmginfo:GetDamageType() == DMG_CRUSH then
 			dmginfo:ScaleDamage(1 / 15)
