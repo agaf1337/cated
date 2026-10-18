@@ -85,7 +85,7 @@ SWEP.ViewPunch = Angle(0, 3, 0)
 
 SWEP.MaxMinSlashDamage = {5, 9}
 
-SWEP.MaxMinStabDamage = {7, 13}
+SWEP.MaxMinDamage = {7, 13}
 
 SWEP.HoldType = "normal"
 
@@ -130,15 +130,15 @@ function SWEP:PrimaryAttack()
     local playRate = 1 * stamScale
 
     if not IsFirstTimePredicted() then
-        self:DoBFSAnimation("stab")
+        self:DoBFSAnimation("")
         self:GetOwner():GetViewModel():SetPlaybackRate(playRate)
         return
     end
 
     if self.AttackType == "Slash" then
-        self:DoBFSAnimation("stab")
-    else
         self:DoBFSAnimation("midslash1")
+    else
+        self:DoBFSAnimation("stab")
     end
 
     self:UpdateNextIdle()
