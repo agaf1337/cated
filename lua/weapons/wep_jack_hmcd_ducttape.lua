@@ -397,25 +397,62 @@ if CLIENT then
 		return pos, ang
 	end
 
-	function SWEP:DrawWorldModel()
-		local Pos, Ang = self:GetOwner():GetBonePosition(self:GetOwner():LookupBone("ValveBiped.Bip01_R_Hand"))
+function SWEP:DrawWorldModel()
+    local owner = self:GetOwner()
 
-		if self.DatWorldModel then
-			if Pos and Ang then
-				self.DatWorldModel:SetRenderOrigin(Pos + Ang:Forward() * 3.5 + Ang:Right() * 5 - Ang:Up() * -1)
-				Ang:RotateAroundAxis(Ang:Right(), 180)
-				--Ang:RotateAroundAxis(Ang:Right(),90)
-				self.DatWorldModel:SetRenderAngles(Ang)
-				self.DatWorldModel:DrawModel()
-			end
-		else
-			self.DatWorldModel = ClientsideModel("models/props_phx/wheels/drugster_front.mdl")
-			self.DatWorldModel:SetPos(self:GetPos())
-			self.DatWorldModel:SetParent(self)
-			self.DatWorldModel:SetNoDraw(true)
-			self.DatWorldModel:SetModelScale(.2, 0)
-			self.DatWorldModel:SetMaterial("models/shiny")
-			self.DatWorldModel:SetColor(Color(100, 100, 100, 255))
-		end
-	end
+    if not IsValid(owner) then
+        if IsValid(self.DatWorldModel) then
+            self.DatWorldModel:Remove()
+            self.DatWorldModel = nil
+        end
+        self:DrawModel()
+        return
+    end
+
+    local Pos, Ang = owner:GetBonePosition(owner:LookupBone("ValveBiped.Bip01_R_Hand"))
+
+    if self.DatWorldModel then
+        if Pos and Ang then
+            self.DatWorldModel:SetRenderOrigin(Pos + Ang:Forward() * 3.5 + Ang:Right() * 5 - Ang:Up() * -1)
+            Ang:RotateAroundAxis(Ang:Right(), 180)
+            self.DatWorldModel:SetRenderAngles(Ang)
+            self.DatWorldModel:DrawModel()
+        end
+    else
+        self.DatWorldModel = ClientsideModel("models/props_phx/wheels/drugster_front.mdl")
+        self.DatWorldModel:SetPos(self:GetPos())
+        self.DatWorldModel:SetParent(self)
+        self.DatWorldModel:SetNoDraw(true)
+        self.DatWorldModel:SetModelScale(.2, 0)
+        self.DatWorldModel:SetMaterial("models/shiny")
+        self.DatWorldModel:SetColor(Color(100, 100, 100, 255))
+    end
+end
+end
+
+function SWEP:OnDrop()
+    local owner = self:GetOwner()
+
+    if self.IsUnfaking then return end
+    if IsValid(owner) and owner.IsUnfaking then return end
+
+    local Ent = ents.Create(self.ENT)
+    Ent.HmcdSpawned = self.HmcdSpawned
+    Ent:SetPos(self:GetPos())
+    Ent:SetAngles(self:GetAngles())
+
+    if self.TapeAmount then
+        Ent.TapeAmount = self.TapeAmount
+    end
+
+    Ent:Spawn()
+    Ent:Activate()
+
+    Ent:SetModelScale(0.2, 0)  
+    Ent:SetModelScale(0.2, 0) 
+
+    if IsValid(Ent:GetPhysicsObject()) then
+        Ent:GetPhysicsObject():SetVelocity(self:GetVelocity() / 2)
+    end
+    self:Remove()
 end
