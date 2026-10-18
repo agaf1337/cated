@@ -1,17 +1,8 @@
-haiiii 
-я покушал жирно очень - makaroni 
-
 # Что из себя представляет? 
-QIWI - HMCD Revive Как понятно из названия сборка представляет из себя попытку возвродить Homicide Union который пытался воссоздать сервер кета.
+Cated - это развитие игрового режима homicide, основанное на QIWI HMCD и вдохновлённое оригинальным HMCD Union.
 
 # Главные отличия:
-* Модульная система раундов
-* ULX Модуль
-* Сильно измененный ганпак
-* Практически полностью переписанный организм
-* Фикснутый аппиренс
-* Переписанная броня (unfinished)
-* еще там мелочи всякие
+* их нет
 
 # Cat Homicide made by Cat
 ## Homicide: Union made by checha , Bara , Mannytko (вроде так, чече снесли гитхаб не могу посмтреть)
@@ -20,4 +11,4 @@ QIWI - HMCD Revive Как понятно из названия сборка пр
 ##### Cated made by agaf
 
 Контент:
-https://steamcommunity.com/sharedfiles/filedetails/?id=3778716960
+https://steamcommunity.com/sharedfiles/filedetails/?id=3822310611
