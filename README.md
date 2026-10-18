@@ -17,6 +17,7 @@ QIWI - HMCD Revive Как понятно из названия сборка пр
 ## Homicide: Union made by checha , Bara , Mannytko (вроде так, чече снесли гитхаб не могу посмтреть)
 ### Homicidal made by kazoo , CROW
 #### QIWI HMCD made by MEDIC , makaroni , <sub>suffix</sub>
+##### Cated made by agaf
 
 Контент:
 https://steamcommunity.com/sharedfiles/filedetails/?id=3778716960
