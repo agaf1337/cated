@@ -1,6 +1,6 @@
 DeriveGamemode("sandbox")
 
-GM.Name = "QIWI Hmcd"
+GM.Name = "Cated"
 GM.Author = "By MEDIC, Makaroni (ex-dev), OG Homicidal by kazoo & crow,  Thanks to Cat. v0.65"
 GM.Email = "N/A"
 GM.Website = "https://discord.gg/XJ5qGhc5p6"
