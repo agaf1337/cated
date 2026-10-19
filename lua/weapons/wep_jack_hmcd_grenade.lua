@@ -109,25 +109,22 @@ function SWEP:Initialize()
 end
 
 function SWEP:OnDrop()
-	local owner = self:GetOwner()
+    local owner = self:GetOwner()
 
-	if self.IsUnfaking then return end
-	if IsValid(owner) and owner.IsUnfaking then return end
+    if self.IsUnfaking then return end
+    if IsValid(owner) and owner.IsUnfaking then return end
 
-	local Ent = ents.Create(self.ENT)
-	Ent.HmcdSpawned = self.HmcdSpawned
-	Ent:SetPos(self:GetPos() + Vector(0, 0, 40))
-	Ent:SetAngles(self:GetAngles())
-	Ent:Spawn()
-	Ent:Activate()
-	if IsValid(Ent:GetPhysicsObject()) then
-		Ent:GetPhysicsObject():SetVelocity(self:GetOwner():GetAimVector() * 165 + self:GetVelocity() / 2)
-	end
-	self:SetAmount(self:GetAmount() - 1)
+    local Ent = ents.Create(self.ENT)
+    Ent.HmcdSpawned = self.HmcdSpawned
+    Ent:SetPos(self:GetPos() + Vector(0, 0, 40))
+    Ent:SetAngles(self:GetAngles())
+    Ent:Spawn()
+    Ent:Activate()
+    if IsValid(Ent:GetPhysicsObject()) then
+        Ent:GetPhysicsObject():SetVelocity(self:GetOwner():GetAimVector() * 165 + self:GetVelocity() / 2)
+    end
 
-	if self:GetAmount() == 0 then
-		self:Remove()
-	end
+    self:Remove()
 end
 
 function SWEP:SecondaryAttack()
