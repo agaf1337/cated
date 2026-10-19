@@ -249,49 +249,63 @@ if CLIENT then
 		return pos, ang
 	end
 
-	function SWEP:DrawWorldModel()
-		if 1 then
-			if not self:GetRigged() then
-				if not self.WModel then
-					self.WModel = ClientsideModel(self.WorldModel)
-					self.WModel:SetPos(self:GetOwner():GetPos())
-					self.WModel:SetParent(self:GetOwner())
-					self.WModel:SetNoDraw(true)
-				else
-					local pos, ang = self:GetOwner():GetBonePosition(self:GetOwner():LookupBone("ValveBiped.Bip01_R_Hand"))
+function SWEP:DrawWorldModel()
+    local owner = self:GetOwner()
 
-					if pos and ang then
-						self.WModel:SetRenderOrigin(pos + ang:Right() * 5 + ang:Up() * 0 + ang:Forward() * 3.5)
-						ang:RotateAroundAxis(ang:Right(), -60)
-						self.WModel:SetRenderAngles(ang)
-						self.WModel:DrawModel()
-					end
-				end
-			else
-				if self.WModel then
-					self.WModel = nil
-				end
 
-				if not self.WModel2 then
-					self.WModel2 = ClientsideModel("models/weapons/w_c4.mdl")
-					self.WModel2:SetPos(self:GetOwner():GetPos())
-					self.WModel2:SetParent(self:GetOwner())
-					self.WModel2:SetBodygroup(1, 1)
-					self.WModel2:SetSubMaterial(0, "models/hands/hands_color")
-					self.WModel2:SetNoDraw(true)
-				else
-					local pos, ang = self:GetOwner():GetBonePosition(self:GetOwner():LookupBone("ValveBiped.Bip01_R_Hand"))
+    if not IsValid(owner) then
+        if IsValid(self.WModel) then
+            self.WModel:Remove()
+            self.WModel = nil
+        end
+        if IsValid(self.WModel2) then
+            self.WModel2:Remove()
+            self.WModel2 = nil
+        end
+        self:DrawModel()
+        return
+    end
 
-					if pos and ang then
-						self.WModel2:SetRenderOrigin(pos + ang:Right() * -0.5 + ang:Up() * -1.5 + ang:Forward() * 3)
-						ang:RotateAroundAxis(ang:Forward(), -220)
-						ang:RotateAroundAxis(ang:Right(), 150)
-						ang:RotateAroundAxis(ang:Up(), -190)
-						self.WModel2:SetRenderAngles(ang)
-						self.WModel2:DrawModel()
-					end
-				end
-			end
-		end
-	end
+    if not self:GetRigged() then
+        if not self.WModel then
+            self.WModel = ClientsideModel(self.WorldModel)
+            self.WModel:SetPos(owner:GetPos())
+            self.WModel:SetParent(owner)
+            self.WModel:SetNoDraw(true)
+        else
+            local pos, ang = owner:GetBonePosition(owner:LookupBone("ValveBiped.Bip01_R_Hand"))
+            if pos and ang then
+                self.WModel:SetRenderOrigin(pos + ang:Right() * 5 + ang:Up() * 0 + ang:Forward() * 3.5)
+                ang:RotateAroundAxis(ang:Right(), -60)
+                self.WModel:SetRenderAngles(ang)
+                self.WModel:DrawModel()
+            end
+        end
+    else
+
+        if self.WModel then
+            self.WModel:Remove()
+            self.WModel = nil
+        end
+
+        if not self.WModel2 then
+            self.WModel2 = ClientsideModel("models/weapons/w_c4.mdl")
+            self.WModel2:SetPos(owner:GetPos())
+            self.WModel2:SetParent(owner)
+            self.WModel2:SetBodygroup(1, 1)
+            self.WModel2:SetSubMaterial(0, "models/hands/hands_color")
+            self.WModel2:SetNoDraw(true)
+        else
+            local pos, ang = owner:GetBonePosition(owner:LookupBone("ValveBiped.Bip01_R_Hand"))
+            if pos and ang then
+                self.WModel2:SetRenderOrigin(pos + ang:Right() * -0.5 + ang:Up() * -1.5 + ang:Forward() * 3)
+                ang:RotateAroundAxis(ang:Forward(), -220)
+                ang:RotateAroundAxis(ang:Right(), 150)
+                ang:RotateAroundAxis(ang:Up(), -190)
+                self.WModel2:SetRenderAngles(ang)
+                self.WModel2:DrawModel()
+            end
+        end
+    end
+end
 end
