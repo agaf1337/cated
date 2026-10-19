@@ -124,6 +124,37 @@ function SWEP:PreDrawViewModel(vm, wep, ply)
 	vm:SetSubMaterial(0, "engine/occlusionproxy")
 end
 
+function SWEP:Holster(newWep)
+    local owner = self:GetOwner()
+    if IsValid(owner) then
+        local vm = owner:GetViewModel()
+        if IsValid(vm) then
+            vm:SetSubMaterial(0, "")
+        end
+    end
+    return true
+end
+
+function SWEP:OnRemove()
+    local owner = self:GetOwner()
+    if IsValid(owner) then
+        local vm = owner:GetViewModel()
+        if IsValid(vm) then
+            vm:SetSubMaterial(0, "")
+        end
+    end
+
+    if IsValid(self.Snowball) then
+        self.Snowball:Remove()
+        self.Snowball = nil
+    end
+    if IsValid(self.DatWorldModel) then
+        self.DatWorldModel:Remove()
+        self.DatWorldModel = nil
+    end
+end
+
+
 function SWEP:Initialize()
 	self:SetHoldType(self.HoldType)
 end
@@ -132,21 +163,25 @@ function SWEP:SetupDataTables()
 end
 
 function SWEP:HandleBreak(impactPos)
-	if CLIENT then return end
-	local owner = self:GetOwner()
-	if not IsValid(owner) then return end
-	sound.Play("physics/glass/glass_pottery_break"..math.random(1,4)..".wav", impactPos, 80, math.random(90, 110))
-	
-	if owner:HasWeapon("wep_jack_hmcd_brassknuckles") then
-		owner:SelectWeapon("wep_jack_hmcd_brassknuckles")
-	else
-		if not owner:HasWeapon("wep_jack_hmcd_hands") then
-			owner:Give("wep_jack_hmcd_hands")
-		end
-		owner:SelectWeapon("wep_jack_hmcd_hands")
-	end
-	
-	self:Remove()
+    if CLIENT then return end
+    local owner = self:GetOwner()
+    if not IsValid(owner) then return end
+
+    local vm = owner:GetViewModel()
+    if IsValid(vm) then vm:SetSubMaterial(0, "") end
+
+    sound.Play("physics/glass/glass_pottery_break"..math.random(1,4)..".wav", impactPos, 80, math.random(90, 110))
+
+    if owner:HasWeapon("wep_jack_hmcd_brassknuckles") then
+        owner:SelectWeapon("wep_jack_hmcd_brassknuckles")
+    else
+        if not owner:HasWeapon("wep_jack_hmcd_hands") then
+            owner:Give("wep_jack_hmcd_hands")
+        end
+        owner:SelectWeapon("wep_jack_hmcd_hands")
+    end
+
+    self:Remove()
 end
 
 function SWEP:SecondaryAttack()
